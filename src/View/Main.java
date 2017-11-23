@@ -28,8 +28,19 @@ import javax.swing.JLabel;
 public class Main extends javax.swing.JFrame {
 
     char mazmorra[][] = {
-        {'@', '@', '@', '@', '@', '@', '@', '@', '@'}
+        {'@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@'},
+        {'@', '.', '.', '.', '.', '.', 'P', '.', '.', '.', '.', '.', '@'},
+        {'@', '.', '@', '@', '@', '@', '.', '@', '@', '@', '@', '.', '@'},
+        {'@', 'F', '@', '@', '@', '@', '.', '@', '@', '@', '@', '.', '@'},
+        {'@', '.', '@', '@', '@', '@', '.', '@', '@', '@', '@', 'F', '@'},
+        {'@', '.', '.', '.', '.', '.', 'F', '.', '.', '.', '.', '.', '@'},
+        {'@', '.', '@', '@', '@', '@', '.', '@', '@', '@', '@', '.', '@'},
+        {'@', 'F', '@', '@', '@', '@', '.', '@', '@', '@', '@', '.', '@'},
+        {'@', '.', '@', '@', '@', '@', '.', '@', '@', '@', '@', 'F', '@'},
+        {'@', 'F', '.', 'F', '.', '.', 'F', '.', '.', 'F', '.', '.', '@'},
+        {'@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@'}
     };
+
     /**
      * Creates new form Main
      *
@@ -50,30 +61,61 @@ public class Main extends javax.swing.JFrame {
             }
 
             public void movimientoFantasma(JLabel fantasma, int comportamiento) {
-                System.out.println(comportamiento);
+                //System.out.println(comportamiento);
                 switch (comportamiento) {
                     case 1:
-                        fantasma.setLocation(fantasma.getX(), fantasma.getY() + 10);
+                        if (validateMove(fantasma, comportamiento)) {
+                            fantasma.setLocation(fantasma.getX(), fantasma.getY() + 10);
+                        }
                         break;
                     case 2:
-                        fantasma.setLocation(fantasma.getX(), fantasma.getY() - 10);
+                        if (validateMove(fantasma, comportamiento)) {
+                            fantasma.setLocation(fantasma.getX(), fantasma.getY() - 10);
+                        }
                         break;
                     case 3:
-                        fantasma.setLocation(fantasma.getX() + 10, fantasma.getY());
+                        if (validateMove(fantasma, comportamiento)) {
+                            fantasma.setLocation(fantasma.getX() + 10, fantasma.getY());
+                        }
                         break;
                     case 4:
-                        fantasma.setLocation(fantasma.getX() - 10, fantasma.getY());
+                        if (validateMove(fantasma, comportamiento)) {
+                            fantasma.setLocation(fantasma.getX() - 10, fantasma.getY());
+                        }
                         break;
                 }
+            }
+
+            public boolean validateMove(JLabel fantasma, int comportamiento) {
+                switch (comportamiento) {
+                    case 1:
+                        if (fantasma.getY() + 10 >= 1000) {
+                            return false;
+                        }
+                        break;
+                    case 2:
+                        if (fantasma.getY() - 10 <= 0) {
+                            return false;
+                        }
+                        break;
+                    case 3:
+                        if (fantasma.getX() + 10 >= 1000) {
+                            return false;
+                        }
+                        break;
+                    case 4:
+                        if (fantasma.getX() - 10 <= 0) {
+                            return false;
+                        }
+                        break;
+                }
+                return true;
             }
         }
         initComponents();
         readMazmorra();
-        ImageIcon imageIcon = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/pacman.png");
-        Image i = imageIcon.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
-        imageIcon.setImage(i);
-        Pacman.setIcon(imageIcon);
-        ImageIcon imageFrutilla1 = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/frutilla.png");
+
+        ImageIcon imageFrutilla1 = new ImageIcon("");
         Image ifrutilla1 = imageFrutilla1.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
         imageFrutilla1.setImage(ifrutilla1);
         Frutilla1.setIcon(imageFrutilla1);
@@ -105,25 +147,72 @@ public class Main extends javax.swing.JFrame {
                 break;
         }
     }
+    
+    public boolean validateMovePacman(KeyEvent event){
+        System.out.println("X: " + Pacman.getX() + " Y: " + Pacman.getY());
+        if (event.getKeyCode() == KeyEvent.VK_UP) {
+            if (mazmorra[(Pacman.getY() - 30) / 30][Pacman.getX() / 30] == '@') {
+                return false;
+            }
+        } else if (event.getKeyCode() == KeyEvent.VK_DOWN) {
+            if (mazmorra[(Pacman.getY() + 30) / 30][Pacman.getX() / 30] == '@') {
+                return false;
+            }
+        } else if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
+            if (mazmorra[(Pacman.getY() / 30)][(Pacman.getX() + 30) / 30] == '@') {
+                return false;
+            }
+        } else if (event.getKeyCode() == KeyEvent.VK_LEFT) {
+            if (mazmorra[(Pacman.getY() / 30)][(Pacman.getX() - 30) / 30] == '@') {
+                return false;
+            }
+        }
+        return true;
+    }
 
-    public void readMazmorra(){
-        JLabel label = new JLabel();
+    public void readMazmorra() {
         for (int i = 0; i < mazmorra.length; i++) {
             for (int j = 0; j < mazmorra[i].length; j++) {
                 if (mazmorra[i][j] == '@') {
-                    /*ImageIcon ladrillo = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/ladrillo.png");
+                    JLabel label = new JLabel();
+                    label.setName("brick");
+                    ImageIcon ladrillo = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/ladrillo.png");
                     Image im = ladrillo.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
                     ladrillo.setImage(im);
                     label.setIcon(ladrillo);
-                    label.setLocation(10, j * 10);*/
-                    label.setLocation(40, j * 10);
-                    label.setText("Hola");
-                    label.setForeground(Color.red);
                     jPanel1.add(label);
+                    label.setBounds(30 * j, 30 * i, 30, 30);
+                } else if (mazmorra[i][j] == '.') {
+                    JLabel label = new JLabel();
+                    label.setName("point");
+                    ImageIcon ladrillo = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/puntoblanco.png");
+                    Image im = ladrillo.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
+                    ladrillo.setImage(im);
+                    label.setIcon(ladrillo);
+                    jPanel1.add(label);
+                    label.setBounds(30 * j, 30 * i, 30, 30);
+                } else if (mazmorra[i][j] == 'P') {
+                    Pacman = new JLabel();
+                    ImageIcon imageIcon = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/pacman.png");
+                    Image iP = imageIcon.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
+                    imageIcon.setImage(iP);
+                    Pacman.setIcon(imageIcon);
+                    jPanel1.add(Pacman);
+                    Pacman.setBounds(30 * j, 30 * i, 30, 30);
+                } else if (mazmorra[i][j] == 'F') {
+                    JLabel label = new JLabel();
+                    label.setName("frutilla");
+                    ImageIcon frutilla = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/frutilla.png");
+                    Image im = frutilla.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
+                    frutilla.setImage(im);
+                    label.setIcon(frutilla);
+                    jPanel1.add(label);
+                    label.setBounds(30 * j, 30 * i, 30, 30);
                 }
             }
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -205,13 +294,17 @@ public class Main extends javax.swing.JFrame {
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
-            Pacman.setLocation(Pacman.getX(), Pacman.getY() + 10);
+            if (validateMovePacman(evt))
+                Pacman.setLocation(Pacman.getX(), Pacman.getY() + 30);
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
-            Pacman.setLocation(Pacman.getX(), Pacman.getY() - 10);
+            if (validateMovePacman(evt))
+                Pacman.setLocation(Pacman.getX(), Pacman.getY() - 30);
         } else if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
-            Pacman.setLocation(Pacman.getX() - 10, Pacman.getY());
+            if (validateMovePacman(evt))
+                Pacman.setLocation(Pacman.getX() - 30, Pacman.getY());
         } else if (evt.getKeyCode() == KeyEvent.VK_RIGHT) {
-            Pacman.setLocation(Pacman.getX() + 10, Pacman.getY());
+            if (validateMovePacman(evt))
+                Pacman.setLocation(Pacman.getX() + 30, Pacman.getY());
         }
     }//GEN-LAST:event_formKeyPressed
 
