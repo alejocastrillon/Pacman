@@ -22,6 +22,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -44,7 +45,9 @@ public class Main extends javax.swing.JFrame {
     };
 
     Timer timer = new Timer();
+    int quantitypoints = 0;
     int points = 0;
+    JLabel puntuacion = new JLabel();
 
     /**
      * Creates new form Main
@@ -70,7 +73,7 @@ public class Main extends javax.swing.JFrame {
 
             public void movimientoFantasma(JLabel fantasma, int comportamiento) {
                 //System.out.println(comportamiento);
-                mazmorra[fantasma.getY() / 30][fantasma.getX() / 30] = ' ';
+                mazmorra[fantasma.getY() / 30][fantasma.getX() / 30] = '.';
                 switch (comportamiento) {
                     case 1:
                         if (validateMove(fantasma, comportamiento)) {
@@ -176,6 +179,9 @@ public class Main extends javax.swing.JFrame {
         jPanel1.add(label);
         label.setBounds(Pacman.getX(), Pacman.getY(), 30, 30);
         System.out.println(points);
+        puntuacion.setForeground(Color.white);
+        puntuacion.setText(String.valueOf(points));
+
     }
 
     public boolean validateLifePacman() {
@@ -211,6 +217,9 @@ public class Main extends javax.swing.JFrame {
     }
 
     public ArrayList<JLabel> readMazmorra(ArrayList<JLabel> fantasmas) {
+        puntuacion.setForeground(Color.white);
+        jPanel1.add(puntuacion);
+        puntuacion.setBounds(mazmorra.length * 50, 10, 200, 50);
         for (int i = 0; i < mazmorra.length; i++) {
             for (int j = 0; j < mazmorra[i].length; j++) {
                 if (mazmorra[i][j] == '@') {
@@ -231,6 +240,7 @@ public class Main extends javax.swing.JFrame {
                     label.setIcon(ladrillo);
                     jPanel1.add(label);
                     label.setBounds(30 * j, 30 * i, 30, 30);
+                    quantitypoints++;
                 } else if (mazmorra[i][j] == 'P') {
                     Pacman = new JLabel();
                     ImageIcon imageIcon = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/pacman.png");
@@ -248,6 +258,7 @@ public class Main extends javax.swing.JFrame {
                     label.setIcon(frutilla);
                     jPanel1.add(label);
                     label.setBounds(30 * j, 30 * i, 30, 30);
+                    quantitypoints = quantitypoints + 5;
                 } else if (mazmorra[i][j] == 'a') {
                     JLabel label = new JLabel();
                     label.setName("Ghost");
@@ -271,6 +282,7 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         }
+        puntuacion.setText(String.valueOf(points) + "\n Puntaje Total: " + quantitypoints);
         return fantasmas;
     }
 
@@ -355,9 +367,23 @@ public class Main extends javax.swing.JFrame {
                 Pacman.setLocation(Pacman.getX() + 30, Pacman.getY());
             }
         }
-
         if (!validateLifePacman()) {
             timer.cancel();
+            JOptionPane.showMessageDialog(this, "Game Over", "Juego", JOptionPane.ERROR_MESSAGE);
+            int reiniciar = JOptionPane.showConfirmDialog(this, "Desea reiniciar el juego?", "Juego", JOptionPane.INFORMATION_MESSAGE);
+            if (reiniciar == 0) {
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        new Main().setVisible(true);
+                    }
+                });
+            } else {
+                this.dispose();
+            }
+        }
+        if(points >= quantitypoints){
+            JOptionPane.showMessageDialog(this, "Felicitaciones", "Juego", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
         }
         addPoint();
     }//GEN-LAST:event_formKeyPressed
