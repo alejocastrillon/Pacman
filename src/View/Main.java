@@ -180,7 +180,7 @@ public class Main extends javax.swing.JFrame {
         label.setBounds(Pacman.getX(), Pacman.getY(), 30, 30);
         System.out.println(points);
         puntuacion.setForeground(Color.white);
-        puntuacion.setText(String.valueOf(points));
+        puntuacion.setText("Puntaje: " + String.valueOf(points) + "\n Puntaje Total: " + quantitypoints);
 
     }
 
@@ -282,7 +282,7 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         }
-        puntuacion.setText(String.valueOf(points) + "\n Puntaje Total: " + quantitypoints);
+        puntuacion.setText("Puntaje: " + String.valueOf(points) + "\n Puntaje Total: " + quantitypoints);
         return fantasmas;
     }
 
@@ -367,6 +367,7 @@ public class Main extends javax.swing.JFrame {
                 Pacman.setLocation(Pacman.getX() + 30, Pacman.getY());
             }
         }
+        addPoint();
         if (!validateLifePacman()) {
             timer.cancel();
             JOptionPane.showMessageDialog(this, "Game Over", "Juego", JOptionPane.ERROR_MESSAGE);
@@ -381,11 +382,10 @@ public class Main extends javax.swing.JFrame {
                 this.dispose();
             }
         }
-        if(points >= quantitypoints){
+        if (points >= quantitypoints) {
             JOptionPane.showMessageDialog(this, "Felicitaciones", "Juego", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
         }
-        addPoint();
     }//GEN-LAST:event_formKeyPressed
 
     /**
