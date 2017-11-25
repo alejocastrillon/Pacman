@@ -202,8 +202,20 @@ public class Main extends javax.swing.JFrame {
         label.setBounds(Pacman.getX(), Pacman.getY(), 30, 30);*/
         if (mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] == '.') {
             points++;
+            for (int i = 0; i < puntos.size(); i++) {
+                if ((puntos.get(i).getX() == Pacman.getX()) && (puntos.get(i).getY() == Pacman.getY())) {
+                    puntos.get(i).setVisible(false);
+                    puntos.remove(i);
+                }
+            }
             mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] = ' ';
         } else if (mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] == 'F') {
+            for (int i = 0; i < frutillas.size(); i++) {
+                if ((frutillas.get(i).getX() == Pacman.getX()) && (frutillas.get(i).getY() == Pacman.getY())) {
+                    frutillas.get(i).setVisible(false);
+                    frutillas.remove(i);
+                }
+            }
             points = points + 5;
             mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] = ' ';
         }
@@ -216,7 +228,8 @@ public class Main extends javax.swing.JFrame {
         label.setIcon(ladrillo);
         jPanel1.add(label);
         label.setBounds(Pacman.getX(), Pacman.getY(), 30, 30);
-        System.out.println(points);
+        System.out.println("Cantidad de puntos: " + puntos.size());
+        System.out.println("Cantidad de frutillas: " + frutillas.size());
         puntuacion.setForeground(Color.white);
         puntuacion.setText("Puntaje: " + String.valueOf(points) + "\n Puntaje Total: " + quantitypoints);
 
@@ -232,7 +245,7 @@ public class Main extends javax.swing.JFrame {
                 if ((fantasmas.get(i).getY() == Pacman.getY()) && (fantasmas.get(i).getX() == Pacman.getX())) {
                     fantasmas.get(i).setVisible(false);
                     fantasmas.remove(i);
-                    mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] = '.';
+                    mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] = ' ';
                     points++;
                     puntuacion.setForeground(Color.white);
                     puntuacion.setText("Puntaje: " + String.valueOf(points) + "\n Puntaje Total: " + quantitypoints);
@@ -290,6 +303,7 @@ public class Main extends javax.swing.JFrame {
                     label.setIcon(ladrillo);
                     jPanel1.add(label);
                     label.setBounds(30 * j, 30 * i, 30, 30);
+                    puntos.add(label);
                     quantitypoints++;
                 } else if (mazmorra[i][j] == 'P') {
                     Pacman = new JLabel();
@@ -307,6 +321,7 @@ public class Main extends javax.swing.JFrame {
                     frutilla.setImage(im);
                     label.setIcon(frutilla);
                     jPanel1.add(label);
+                    frutillas.add(label);
                     label.setBounds(30 * j, 30 * i, 30, 30);
                     quantitypoints = quantitypoints + 5;
                 } else if (mazmorra[i][j] == 'a') {
@@ -430,11 +445,15 @@ public class Main extends javax.swing.JFrame {
                 });
             } else {
                 this.dispose();
+                timer.cancel();
+                t.cancel();
             }
         }
         if (points >= quantitypoints) {
             JOptionPane.showMessageDialog(this, "Felicitaciones", "Juego", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
+            timer.cancel();
+            t.cancel();
         }
     }//GEN-LAST:event_formKeyPressed
 
@@ -474,6 +493,8 @@ public class Main extends javax.swing.JFrame {
     }
 
     private ArrayList<JLabel> fantasmas = new ArrayList<>();
+    private ArrayList<JLabel> puntos = new ArrayList<>();
+    private ArrayList<JLabel> frutillas = new ArrayList<>();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Frutilla1;
     private javax.swing.JLabel Pacman;
