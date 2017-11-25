@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -45,9 +46,11 @@ public class Main extends javax.swing.JFrame {
     };
 
     Timer timer = new Timer();
+    Timer t = new Timer();
     int quantitypoints = 0;
     int points = 0;
     JLabel puntuacion = new JLabel();
+    boolean respawn = false;
 
     /**
      * Creates new form Main
@@ -125,6 +128,36 @@ public class Main extends javax.swing.JFrame {
                 return true;
             }
         }
+        class RespawnGhost extends TimerTask {
+
+            @Override
+            public void run() {
+                if (respawn) {
+                    for (int i = 0; i < fantasmas.size(); i++) {
+                        ImageIcon respicon = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/respawn.gif");
+                        Image respimage = respicon.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
+                        respicon.setImage(respimage);
+                        fantasmas.get(i).setIcon(respicon);
+                    }
+                } else {
+                    for (int i = 0; i < fantasmas.size(); i++) {
+                        if (fantasmas.get(i).getName().equals("GhostBlue")) {
+                            ImageIcon ifantasmaazul = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/fantasmaazul.png");
+                            Image iazul = ifantasmaazul.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
+                            ifantasmaazul.setImage(iazul);
+                            fantasmas.get(i).setIcon(ifantasmaazul);
+                        } else {
+                            ImageIcon ifantasmaverde = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/fantasmaverde.png");
+                            Image iverde = ifantasmaverde.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
+                            ifantasmaverde.setImage(iverde);
+                            fantasmas.get(i).setIcon(ifantasmaverde);
+                        }
+                    }
+                }
+                respawn = !respawn;
+            }
+
+        }
         initComponents();
         fantasmas = readMazmorra(fantasmas);
         ImageIcon imageFrutilla1 = new ImageIcon("");
@@ -132,6 +165,11 @@ public class Main extends javax.swing.JFrame {
         imageFrutilla1.setImage(ifrutilla1);
         Frutilla1.setIcon(imageFrutilla1);
         timer.schedule(new MovimientoGhost(), 0, 1000);
+        if (respawn) {
+            t.schedule(new RespawnGhost(), 0, 5000);
+        } else {
+            t.schedule(new RespawnGhost(), 0, 20000);
+        }
         //Timer t = new Timer();
         //t.schedule(new LifePacman(), 0, 1000);
     }
@@ -186,9 +224,21 @@ public class Main extends javax.swing.JFrame {
 
     public boolean validateLifePacman() {
         System.out.println("h");
-        if (mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] == 'a') {
+        if ((mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] == 'a') && (respawn)) {
             System.out.println("false");
             return false;
+        } else if ((mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] == 'a') && (!respawn)) {
+            for (int i = 0; i < fantasmas.size(); i++) {
+                if ((fantasmas.get(i).getY() == Pacman.getY()) && (fantasmas.get(i).getX() == Pacman.getX())) {
+                    fantasmas.get(i).setVisible(false);
+                    fantasmas.remove(i);
+                    mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] = '.';
+                    points++;
+                    puntuacion.setForeground(Color.white);
+                    puntuacion.setText("Puntaje: " + String.valueOf(points) + "\n Puntaje Total: " + quantitypoints);
+                    return true;
+                }
+            }
         }
         System.out.println("h");
         return true;
@@ -261,7 +311,7 @@ public class Main extends javax.swing.JFrame {
                     quantitypoints = quantitypoints + 5;
                 } else if (mazmorra[i][j] == 'a') {
                     JLabel label = new JLabel();
-                    label.setName("Ghost");
+                    label.setName("GhostBlue");
                     ImageIcon ifantasmaazul = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/fantasmaazul.png");
                     Image iazul = ifantasmaazul.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
                     ifantasmaazul.setImage(iazul);
@@ -271,7 +321,7 @@ public class Main extends javax.swing.JFrame {
                     fantasmas.add(label);
                 } else if (mazmorra[i][j] == 'v') {
                     JLabel label = new JLabel();
-                    label.setName("Ghost");
+                    label.setName("GhostGreen");
                     ImageIcon ifantasmaverde = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/fantasmaverde.png");
                     Image iverde = ifantasmaverde.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
                     ifantasmaverde.setImage(iverde);
