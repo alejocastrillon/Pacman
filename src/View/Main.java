@@ -52,6 +52,7 @@ public class Main extends javax.swing.JFrame {
     char mazmorra [][] = null;
     char mazmorra1[][] = lm.readFile(1);
     char mazmorra2[][] = lm.readFile(2);
+    char mazmorra3[][] = lm.readFile(3);
     
     Timer timer = new Timer();
     Timer t = new Timer();
@@ -72,6 +73,7 @@ public class Main extends javax.swing.JFrame {
         return resizedImage;  
     }  */
     public Main(int levelactual) {
+        level = levelactual;
         class MovimientoGhost extends TimerTask {
 
             public void run() {
@@ -173,6 +175,9 @@ public class Main extends javax.swing.JFrame {
                 break;
             case 2:
                 mazmorra = mazmorra2;
+                break;
+            case 3:
+                mazmorra = mazmorra3;
         }
         initComponents();
         readMazmorra();
