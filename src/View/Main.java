@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -158,6 +159,7 @@ public class Main extends javax.swing.JFrame {
             }
 
         }
+        this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         initComponents();
         fantasmas = readMazmorra(fantasmas);
         ImageIcon imageFrutilla1 = new ImageIcon("");
