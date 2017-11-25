@@ -5,6 +5,7 @@
  */
 package View;
 
+import Models.LectorMazmorra;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -32,7 +33,7 @@ import javax.swing.JOptionPane;
  */
 public class Main extends javax.swing.JFrame {
 
-    char mazmorra[][] = {
+    /*char mazmorra[][] = {
         {'@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@'},
         {'@', '.', '.', 'a', '.', '.', 'P', '.', '.', '.', '.', '.', '@'},
         {'@', '.', '@', '@', '@', '@', '.', '@', '@', '@', '@', '.', '@'},
@@ -44,7 +45,9 @@ public class Main extends javax.swing.JFrame {
         {'@', '.', '@', '@', '@', '@', '.', '@', '@', '@', '@', 'F', '@'},
         {'@', 'F', '.', 'F', '.', '.', 'F', '.', '.', 'F', '.', '.', '@'},
         {'@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@'}
-    };
+    };*/
+    LectorMazmorra lm = new LectorMazmorra();
+    char mazmorra [][] = lm.readFile();
 
     Timer timer = new Timer();
     Timer t = new Timer();
