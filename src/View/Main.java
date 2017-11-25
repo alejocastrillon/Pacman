@@ -46,9 +46,13 @@ public class Main extends javax.swing.JFrame {
         {'@', 'F', '.', 'F', '.', '.', 'F', '.', '.', 'F', '.', '.', '@'},
         {'@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@'}
     };*/
+    int level = 1;
+    int quantitylevels = 2;
     LectorMazmorra lm = new LectorMazmorra();
-    char mazmorra [][] = lm.readFile();
-
+    char mazmorra [][] = null;
+    char mazmorra1[][] = lm.readFile(1);
+    char mazmorra2[][] = lm.readFile(2);
+    
     Timer timer = new Timer();
     Timer t = new Timer();
     int quantitypoints = 0;
@@ -67,7 +71,7 @@ public class Main extends javax.swing.JFrame {
         g.dispose();  
         return resizedImage;  
     }  */
-    public Main() {
+    public Main(int levelactual) {
         class MovimientoGhost extends TimerTask {
 
             public void run() {
@@ -163,8 +167,15 @@ public class Main extends javax.swing.JFrame {
 
         }
         this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        switch (levelactual){
+            case 1:
+                mazmorra = mazmorra1; 
+                break;
+            case 2:
+                mazmorra = mazmorra2;
+        }
         initComponents();
-        fantasmas = readMazmorra(fantasmas);
+        readMazmorra();
         ImageIcon imageFrutilla1 = new ImageIcon("");
         Image ifrutilla1 = imageFrutilla1.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
         imageFrutilla1.setImage(ifrutilla1);
@@ -284,7 +295,7 @@ public class Main extends javax.swing.JFrame {
         return true;
     }
 
-    public ArrayList<JLabel> readMazmorra(ArrayList<JLabel> fantasmas) {
+    public ArrayList<JLabel> readMazmorra() {
         puntuacion.setForeground(Color.white);
         jPanel1.add(puntuacion);
         puntuacion.setBounds(mazmorra.length * 50, 10, 200, 50);
@@ -445,7 +456,7 @@ public class Main extends javax.swing.JFrame {
             if (reiniciar == 0) {
                 java.awt.EventQueue.invokeLater(new Runnable() {
                     public void run() {
-                        new Main().setVisible(true);
+                        new Main(1).setVisible(true);
                     }
                 });
             } else {
@@ -457,8 +468,12 @@ public class Main extends javax.swing.JFrame {
         if (points >= quantitypoints) {
             JOptionPane.showMessageDialog(this, "Felicitaciones", "Juego", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
-            timer.cancel();
-            t.cancel();
+            level++;
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        new Main(level++).setVisible(true);
+                    }
+                });
         }
     }//GEN-LAST:event_formKeyPressed
 
@@ -492,7 +507,7 @@ public class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Main().setVisible(true);
+                new Main(1).setVisible(true);
             }
         });
     }

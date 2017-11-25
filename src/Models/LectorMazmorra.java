@@ -17,9 +17,9 @@ import java.util.Scanner;
  */
 public class LectorMazmorra {
 
-    public char[][] readFile() {
-        char mazmorra[][] = new char[20][17];
-        File f = new File("/home/alejandro/NetBeansProjects/Pacman/src/View/levels/level1.txt");
+    public char[][] readFile(int u) {
+        char mazmorra[][] = new char[20][20];
+        File f = new File("/home/alejandro/NetBeansProjects/Pacman/src/View/levels/level"+u+".txt");
         try {
             Scanner scanner = new Scanner(f);
             int i = 0;
