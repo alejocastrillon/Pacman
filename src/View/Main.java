@@ -24,12 +24,15 @@ import javax.swing.JOptionPane;
 public class Main extends javax.swing.JFrame {
 
     int level = 1;
-    int quantitylevels = 2;
+    int quantitylevels = 6;
     LectorMazmorra lm = new LectorMazmorra();
     char mazmorra[][] = null;
     char mazmorra1[][] = lm.readFile(1);
     char mazmorra2[][] = lm.readFile(2);
     char mazmorra3[][] = lm.readFile(3);
+    char mazmorra4[][] = lm.readFile(4);
+    char mazmorra5[][] = lm.readFile(5);
+    char mazmorra6[][] = lm.readFile(6);
 
     Timer timer = new Timer();
     Timer t = new Timer();
@@ -51,6 +54,10 @@ public class Main extends javax.swing.JFrame {
     }  */
     public Main(int levelactual) {
         level = levelactual;
+
+        /**
+         * Clase encargada de los movimientos de los fantasmas
+         */
         class MovimientoGhost extends TimerTask {
 
             public void run() {
@@ -61,8 +68,13 @@ public class Main extends javax.swing.JFrame {
                 movimientoFantasma(fantasmaverde1, (int) Math.floor(Math.random() * 5));*/
             }
 
+            /**
+             * Mueve los fantasmas aleatoriamente
+             *
+             * @param fantasma
+             * @param comportamiento
+             */
             public void movimientoFantasma(JLabel fantasma, int comportamiento) {
-                //System.out.println(comportamiento);
                 mazmorra[fantasma.getY() / 30][fantasma.getX() / 30] = '.';
                 switch (comportamiento) {
                     case 1:
@@ -89,6 +101,13 @@ public class Main extends javax.swing.JFrame {
                 mazmorra[fantasma.getY() / 30][fantasma.getX() / 30] = 'a';
             }
 
+            /**
+             * Valida el movimiento aleatorio del fantasma
+             *
+             * @param fantasma
+             * @param comportamiento
+             * @return
+             */
             public boolean validateMove(JLabel fantasma, int comportamiento) {
                 switch (comportamiento) {
                     case 1:
@@ -115,6 +134,9 @@ public class Main extends javax.swing.JFrame {
                 return true;
             }
         }
+        /**
+         * Clase encargada del Respawn de los fantasmas
+         */
         class RespawnGhost extends TimerTask {
 
             @Override
@@ -155,9 +177,20 @@ public class Main extends javax.swing.JFrame {
                 break;
             case 3:
                 mazmorra = mazmorra3;
+                break;
+            case 4:
+                mazmorra = mazmorra4;
+                break;
+            case 5:
+                mazmorra = mazmorra5;
+                break;
+            case 6:
+                mazmorra = mazmorra6;
+                break;
         }
         initComponents();
-        if (levelactual > 3) {
+        if (levelactual > quantitylevels) {
+            JOptionPane.showMessageDialog(this, "Felicitaciones pasastes todos los niveles", "Pacman", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
         } else {
             readMazmorra();
@@ -174,17 +207,22 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
-    
+    /**
+     * Muestra los puntos obtenidos por el jugador
+     */
     public void showPoint() {
         puntuacion.setForeground(Color.white);
         puntuacion.setText("Puntaje: " + String.valueOf(points) + "\n Puntaje Total: " + quantitypoints);
 
     }
 
+    /**
+     * Valida si el pacman aun sigue vivo
+     *
+     * @return
+     */
     public boolean validateLifePacman() {
-        System.out.println("h");
         if ((mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] == 'a') && (respawn)) {
-            System.out.println("false");
             return false;
         } else if ((mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] == 'a') && (!respawn)) {
             for (int i = 0; i < fantasmas.size(); i++) {
@@ -199,10 +237,15 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         }
-        System.out.println("h");
         return true;
     }
 
+    /**
+     * Valida el movimiento del Pacman
+     *
+     * @param event
+     * @return
+     */
     public boolean validateMovePacman(KeyEvent event) {
         System.out.println("X: " + Pacman.getX() + " Y: " + Pacman.getY());
         if (event.getKeyCode() == KeyEvent.VK_UP) {
@@ -225,6 +268,11 @@ public class Main extends javax.swing.JFrame {
         return true;
     }
 
+    /**
+     * Construye la mazmorra de acuerdo al nivel que se encuentre el jugador
+     *
+     * @return
+     */
     public ArrayList<JLabel> readMazmorra() {
         puntuacion.setForeground(Color.white);
         jPanel1.add(puntuacion);
