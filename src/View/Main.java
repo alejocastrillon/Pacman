@@ -7,21 +7,11 @@ package View;
 
 import Models.LectorMazmorra;
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.List;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,19 +23,6 @@ import javax.swing.JOptionPane;
  */
 public class Main extends javax.swing.JFrame {
 
-    /*char mazmorra[][] = {
-        {'@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@'},
-        {'@', '.', '.', 'a', '.', '.', 'P', '.', '.', '.', '.', '.', '@'},
-        {'@', '.', '@', '@', '@', '@', '.', '@', '@', '@', '@', '.', '@'},
-        {'@', 'F', '@', '@', '@', '@', '.', '@', '@', '@', '@', '.', '@'},
-        {'@', '.', '@', '@', '@', '@', '.', '@', '@', '@', '@', 'F', '@'},
-        {'@', 'v', '.', '.', '.', '.', 'F', '.', '.', '.', '.', '.', '@'},
-        {'@', '.', '@', '@', '@', '@', '.', '@', '@', '@', '@', 'a', '@'},
-        {'@', 'F', '@', '@', '@', '@', '.', '@', '@', '@', '@', '.', '@'},
-        {'@', '.', '@', '@', '@', '@', '.', '@', '@', '@', '@', 'F', '@'},
-        {'@', 'F', '.', 'F', '.', '.', 'F', '.', '.', 'F', '.', '.', '@'},
-        {'@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@'}
-    };*/
     int level = 1;
     int quantitylevels = 2;
     LectorMazmorra lm = new LectorMazmorra();
@@ -180,7 +157,11 @@ public class Main extends javax.swing.JFrame {
                 mazmorra = mazmorra3;
         }
         initComponents();
-        readMazmorra();
+        if (levelactual > 3) {
+            this.dispose();
+        } else {
+            readMazmorra();
+        }
         ImageIcon imageFrutilla1 = new ImageIcon("");
         Image ifrutilla1 = imageFrutilla1.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
         imageFrutilla1.setImage(ifrutilla1);
@@ -193,24 +174,8 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
-    public void addPoint() {
-        if (mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] == '.') {
-            points++;
-            mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] = ' ';
-        } else if (mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] == 'F') {
-            points = points + 5;
-            mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] = ' ';
-        }
-        JLabel label = new JLabel();
-        label.setName("point");
-        ImageIcon ladrillo = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/black.png");
-        Image im = ladrillo.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
-        ladrillo.setImage(im);
-        label.setIcon(ladrillo);
-        jPanel1.add(label);
-        label.setBounds(Pacman.getX(), Pacman.getY(), 30, 30);
-        System.out.println("Cantidad de puntos: " + puntos.size());
-        System.out.println("Cantidad de frutillas: " + frutillas.size());
+    
+    public void showPoint() {
         puntuacion.setForeground(Color.white);
         puntuacion.setText("Puntaje: " + String.valueOf(points) + "\n Puntaje Total: " + quantitypoints);
 
@@ -417,15 +382,17 @@ public class Main extends javax.swing.JFrame {
             if ((puntos.get(i).getX() == Pacman.getX()) && (puntos.get(i).getY() == Pacman.getY())) {
                 puntos.get(i).setVisible(false);
                 puntos.remove(i);
+                points++;
             }
         }
         for (int i = 0; i < frutillas.size(); i++) {
             if ((frutillas.get(i).getX() == Pacman.getX()) && (frutillas.get(i).getY() == Pacman.getY())) {
                 frutillas.get(i).setVisible(false);
                 frutillas.remove(i);
+                points = points + 5;
             }
         }
-        addPoint();
+        showPoint();
         if (!validateLifePacman()) {
             timer.cancel();
             JOptionPane.showMessageDialog(this, "Game Over", "Juego", JOptionPane.ERROR_MESSAGE);
