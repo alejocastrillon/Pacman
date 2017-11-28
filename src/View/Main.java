@@ -49,11 +49,11 @@ public class Main extends javax.swing.JFrame {
     int level = 1;
     int quantitylevels = 2;
     LectorMazmorra lm = new LectorMazmorra();
-    char mazmorra [][] = null;
+    char mazmorra[][] = null;
     char mazmorra1[][] = lm.readFile(1);
     char mazmorra2[][] = lm.readFile(2);
     char mazmorra3[][] = lm.readFile(3);
-    
+
     Timer timer = new Timer();
     Timer t = new Timer();
     int quantitypoints = 0;
@@ -169,9 +169,9 @@ public class Main extends javax.swing.JFrame {
 
         }
         this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        switch (levelactual){
+        switch (levelactual) {
             case 1:
-                mazmorra = mazmorra1; 
+                mazmorra = mazmorra1;
                 break;
             case 2:
                 mazmorra = mazmorra2;
@@ -191,56 +191,16 @@ public class Main extends javax.swing.JFrame {
         } else {
             t.schedule(new RespawnGhost(), 0, 20000);
         }
-        //Timer t = new Timer();
-        //t.schedule(new LifePacman(), 0, 1000);
-    }
-
-    public void movimientoFantasma(JLabel fantasma, int comportamiento) {
-        switch (comportamiento) {
-            case 1:
-                fantasma.setLocation(fantasma.getX(), fantasma.getY() + 10);
-                break;
-            case 2:
-                fantasma.setLocation(fantasma.getX(), fantasma.getY() - 10);
-                break;
-            case 3:
-                fantasma.setLocation(fantasma.getX() + 10, fantasma.getY());
-                break;
-            case 4:
-                fantasma.setLocation(fantasma.getX() - 10, fantasma.getY());
-                break;
-        }
     }
 
     public void addPoint() {
-        /*JLabel label = new JLabel();
-        label.setName("point");
-        ImageIcon ladrillo = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/black.png");
-        Image im = ladrillo.getImage().getScaledInstance(30, 30, Image.SCALE_FAST);
-        ladrillo.setImage(im);
-        label.setIcon(ladrillo);
-        jPanel1.add(label);
-        label.setBounds(Pacman.getX(), Pacman.getY(), 30, 30);*/
         if (mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] == '.') {
             points++;
-            for (int i = 0; i < puntos.size(); i++) {
-                if ((puntos.get(i).getX() == Pacman.getX()) && (puntos.get(i).getY() == Pacman.getY())) {
-                    puntos.get(i).setVisible(false);
-                    puntos.remove(i);
-                }
-            }
             mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] = ' ';
         } else if (mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] == 'F') {
-            for (int i = 0; i < frutillas.size(); i++) {
-                if ((frutillas.get(i).getX() == Pacman.getX()) && (frutillas.get(i).getY() == Pacman.getY())) {
-                    frutillas.get(i).setVisible(false);
-                    frutillas.remove(i);
-                }
-            }
             points = points + 5;
             mazmorra[Pacman.getY() / 30][Pacman.getX() / 30] = ' ';
         }
-        //Falta esta monda
         JLabel label = new JLabel();
         label.setName("point");
         ImageIcon ladrillo = new ImageIcon("/home/alejandro/NetBeansProjects/Pacman/src/View/drawable/black.png");
@@ -453,6 +413,18 @@ public class Main extends javax.swing.JFrame {
                 Pacman.setLocation(Pacman.getX() + 30, Pacman.getY());
             }
         }
+        for (int i = 0; i < puntos.size(); i++) {
+            if ((puntos.get(i).getX() == Pacman.getX()) && (puntos.get(i).getY() == Pacman.getY())) {
+                puntos.get(i).setVisible(false);
+                puntos.remove(i);
+            }
+        }
+        for (int i = 0; i < frutillas.size(); i++) {
+            if ((frutillas.get(i).getX() == Pacman.getX()) && (frutillas.get(i).getY() == Pacman.getY())) {
+                frutillas.get(i).setVisible(false);
+                frutillas.remove(i);
+            }
+        }
         addPoint();
         if (!validateLifePacman()) {
             timer.cancel();
@@ -470,15 +442,15 @@ public class Main extends javax.swing.JFrame {
                 t.cancel();
             }
         }
-        if (points >= quantitypoints) {
+        if ((puntos.isEmpty()) && (frutillas.isEmpty())) {
             JOptionPane.showMessageDialog(this, "Felicitaciones", "Juego", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
             level++;
             java.awt.EventQueue.invokeLater(new Runnable() {
-                    public void run() {
-                        new Main(level++).setVisible(true);
-                    }
-                });
+                public void run() {
+                    new Main(level++).setVisible(true);
+                }
+            });
         }
     }//GEN-LAST:event_formKeyPressed
 
